@@ -23,6 +23,7 @@ public class SpriteScript : MonoBehaviour
         if (state == OthelloScript.SpriteState.White)
         {
             gameObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+            #region　何も置けない状態と置けるマスの状態のオブジェクトを削除する。
             if (WallHantei)
             {
                 Destroy(WallObj);
@@ -33,10 +34,12 @@ public class SpriteScript : MonoBehaviour
                 Destroy(ChoiceObj);
                 ChoiceHantei = false;
             }
+            #endregion
         }
         else if(state == OthelloScript.SpriteState.Black)
         {
             gameObject.transform.rotation = Quaternion.Euler(270, 0, 0);
+            #region　何も置けない状態と置けるマスの状態のオブジェクトを削除する。
             if (WallHantei)
             {
                 Destroy(WallObj);
@@ -47,9 +50,11 @@ public class SpriteScript : MonoBehaviour
                 Destroy(ChoiceObj);
                 ChoiceHantei = false;
             }
+            #endregion
         }
         else if(state == OthelloScript.SpriteState.Wall)
-        {   if(!WallHantei) 
+        {   #region　何も置けない状態のオブジェクトを表示する。
+            if(!WallHantei) 
             {
                 WallObjMaterial.transform.position = new Vector3(
                     CubePoint.transform.localPosition.x,
@@ -61,10 +66,10 @@ public class SpriteScript : MonoBehaviour
                 WallHantei = true;
             }
             gameObject.SetActive(false);
-
+            #endregion
         }
         else if (state == OthelloScript.SpriteState.NoneChoice)
-        {
+        {    #region　置けるマスの状態のオブジェクトを表示する。
             if (!ChoiceHantei)
             {
                 ChoicePoint.transform.position = new Vector3(
@@ -77,12 +82,13 @@ public class SpriteScript : MonoBehaviour
                 ChoiceHantei = true;
             }
             gameObject.SetActive(false);
-
+            #endregion
         }
         else
         {
             gameObject.SetActive(false);
-
+            
+            #region　何も置けない状態と置けるマスの状態のオブジェクトを削除する。
             if (WallHantei)
             {   
                 Destroy(WallObj);
@@ -93,7 +99,7 @@ public class SpriteScript : MonoBehaviour
                 ChoiceHantei = false;
             }
 
-
+            #endregion
         }
     }
     
