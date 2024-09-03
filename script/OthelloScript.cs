@@ -105,9 +105,7 @@ public class OthelloScript : MonoBehaviour
     }
 
     void Update()
-    {
-
-        #region ���W�ݒ�
+    {    #region　Cubeの座標を動かす処理
         var position = Cube.transform.localPosition;
         if (EventSystem.current.currentSelectedGameObject == firstSelectedGameObject && Time.time - lastMoveTime >= moveDelay)
         {
@@ -139,19 +137,21 @@ public class OthelloScript : MonoBehaviour
             }
         }
 
-
+        
         if (Input.GetKeyDown(KeyCode.LeftArrow) && (!Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow)) && Cube_Position_X == 0) Cube_Controll = false;
         else if (Input.GetKeyDown(KeyCode.RightArrow) && (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow)) && Cube_Position_X == 7) Cube_Controll = false;
 
         if (Cube_Controll) EventSystem.current.SetSelectedGameObject(firstSelectedGameObject);
         #endregion
 
+        #region　カスタムモードとゲームモードの切り替え
         if (!bottonProcess.CustumHantei) GameMode();
         else CustumMode();
-
+        #endregion
 
 
     }
+    #region　カスタムモードの処理部分
     private void CustumMode()
     {
         if (EventSystem.current.currentSelectedGameObject == firstSelectedGameObject)
@@ -167,6 +167,7 @@ public class OthelloScript : MonoBehaviour
 
         ShowSpriteBoard();
     }
+    #endregion
     private void GameMode()
     {
         var turnCheck = false;
@@ -178,15 +179,15 @@ public class OthelloScript : MonoBehaviour
                 {
                     if (TurnCheck(i, Cube_Position_X, Cube_Position_Y)) turnCheck = true;
                 }
+                #region　プレイヤーが置ける石として表示するマスを初期化
                 for (int x = 0; x < FIELD_SIZE_X; x++)
                 {
                     for (int y = 0; y < FIELD_SIZE_Y; y++)
                     {
                         if (FieldState[x, y] == SpriteState.NoneChoice) FieldState[x, y] = SpriteState.None;
                     }
-
-
                 }
+                #endregion
                 if (turnCheck && (FieldState[Cube_Position_X, Cube_Position_Y] == SpriteState.None || FieldState[Cube_Position_X, Cube_Position_Y] == SpriteState.NoneChoice))
                 {
                     StonePutAudio.Play();
@@ -267,16 +268,19 @@ public class OthelloScript : MonoBehaviour
 
         }
         ShowSpriteBoard();
+        #region　黒と白どちらのターンなのかを表示。現在の黒石と白石の数を表示。
         if (PlayerTurn == SpriteState.White) ColorChange(0.0f, 1.0f);
         else if (PlayerTurn == SpriteState.Black) ColorChange(1.0f, 0.0f);
 
-
+        
         BlackNumText.text = BlackNum.ToString();
         WhiteNumText.text = WhiteNum.ToString();
+        #endregion
         if (WhiteNum + BlackNum == 64 || !WhiteCheckFlag && !BlackCheckFlag) GameOver(WhiteNum, BlackNum);
     }
+    #region 対戦終了時のUI表示
     private void GameOver(int WhiteNum, int BlackNum)
-    {
+    {    
         GameObject Black = WinTextObj.transform.Find("Black").gameObject;
         GameObject White = WinTextObj.transform.Find("White").gameObject;
         Cube.SetActive(false);
@@ -298,6 +302,7 @@ public class OthelloScript : MonoBehaviour
 
 
     }
+    #endregion
 
     private bool TurnCheck(int Direction, int field_size_x, int field_size_y)
     {
@@ -311,41 +316,41 @@ public class OthelloScript : MonoBehaviour
         {
             switch (Direction)
             {
-                case 0://������
+                case 0:
                     if (position_x == 0) return turnCheck;
                     position_x--;
                     break;
-                case 1://�E����
+                case 1:
                     if (position_x == 7) return turnCheck;
                     position_x++;
                     break;
-                case 2://������
+                case 2:
                     if (position_y == 0) return turnCheck;
                     position_y--;
                     break;
-                case 3://�������
+                case 3:
                     if (position_y == 7) return turnCheck;
                     position_y++;
                     break;
-                case 4://�E�����
+                case 4:
                     if (position_x == 7) return turnCheck;
                     if (position_y == 7) return turnCheck;
                     position_x++;
                     position_y++;
                     break;
-                case 5://��������
+                case 5:
                     if (position_x == 0) return turnCheck;
                     if (position_y == 0) return turnCheck;
                     position_x--;
                     position_y--;
                     break;
-                case 6://�������
+                case 6:
                     if (position_x == 0) return turnCheck;
                     if (position_y == 7) return turnCheck;
                     position_x--;
                     position_y++;
                     break;
-                case 7://�E������
+                case 7:
                     if (position_x == 7) return turnCheck;
                     if (position_y == 0) return turnCheck;
                     position_x++;
@@ -374,29 +379,22 @@ public class OthelloScript : MonoBehaviour
         return turnCheck;
     }
     
-
+    #region 対戦モードでの盤面の状態をカスタム盤面の状態にリセット
     public void ResetBoardGame()
     {
         
         ResetBoardProcess(FieldState, FieldStateCustum);
     }
+    #endregion
+    
+    #region カスタムモードでの盤面の状態を初期状態にリセット
     public void ResetBoardCustum()
     {
         ResetBoardProcess(FieldState, FieldStateStart);
     }
-    public void ResetBoardReturn()
-    {
-        Cube.SetActive(false);
-        ResetBoardProcess(FieldState, FieldStateNone);
-        ResetBoardProcess(FieldStateCustum, FieldStateStart);
-        FieldState[4, 3] = SpriteState.White;
-        FieldState[3, 4] = SpriteState.White;
-        FieldState[3, 3] = SpriteState.Black;
-        FieldState[4, 4] = SpriteState.Black;
-        
-
-    }
-
+    #endregion
+    
+    #region 特定の二つのオブジェクトの透明度を変更
     void ColorChange(float Black, float White)
     {
         BlackColor.a = Black;
@@ -404,6 +402,9 @@ public class OthelloScript : MonoBehaviour
         WhiteColor.a = White;
         WhiteImage.color = WhiteColor;
     }
+    #endregion
+
+    #region １つの盤面のデータ情報を全てもう一つの盤面のデータ情報に代入。また、Cubeの初期位置及びプレイヤーターンの情報を黒のターンに変える。
     void ResetBoardProcess(SpriteState[,] MainSpriteState, SpriteState[,] TargetSpriteState)
     {
         for (int x = 0; x < FIELD_SIZE_X; x++)
@@ -418,6 +419,9 @@ public class OthelloScript : MonoBehaviour
         Cube_Position_X = 3;
         Cube_Position_Y = 3;
     }
+    #endregion
+
+    #region 現在の盤面を全て表示する
     void ShowSpriteBoard()
     {
         for (int x = 0; x < FIELD_SIZE_X; x++)
@@ -428,5 +432,6 @@ public class OthelloScript : MonoBehaviour
             }
         }
     }
+    #endregion
     
 }
