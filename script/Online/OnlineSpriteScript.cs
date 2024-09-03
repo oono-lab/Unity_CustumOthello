@@ -48,7 +48,6 @@ public class OnlineSpriteScript : MonoBehaviourPun
         }
         else if (state == OnlineOthelloScript.SpriteState.Wall)
         {
-            //Debug.Log(OnlineOthelloObject);
             if (!WallHantei)
             {
                 WallObjMaterial.transform.position = new Vector3(
