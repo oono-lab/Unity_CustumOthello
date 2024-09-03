@@ -6,13 +6,12 @@ using UnityEngine.EventSystems;
 public class ButtonSelectControl : MonoBehaviour
 {
     private GameObject CurrentSelectObj;
-    // Start is called before the first frame update
 
     void Update()
     {
-         
+         #region　マウスクリックにより現在選択中のボタンのトリガーが外れた際に元に戻す
         if (Input.GetMouseButtonDown(0)) EventSystem.current.SetSelectedGameObject(CurrentSelectObj);
         else CurrentSelectObj = EventSystem.current.currentSelectedGameObject;
-
+        #endregion
     }
 }
