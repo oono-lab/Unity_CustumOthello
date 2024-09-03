@@ -25,7 +25,7 @@ public class Botton_process : MonoBehaviour
     private TextMeshProUGUI ChoiceUIText;
     private bool ResetHantei = false;
     private bool GameOverHantei = false;
-    //public GameObject button_list;
+    
     void Start()
     {   
         othelloScript = OthelloSystemScripts.GetComponent<OthelloScript>();
@@ -36,6 +36,7 @@ public class Botton_process : MonoBehaviour
     {
         Application.Quit();
     }
+    #region　カスタムモードのUI表示
     public void Custum()
     {
         button_active(false, BottonLsist_first);
@@ -45,15 +46,22 @@ public class Botton_process : MonoBehaviour
         othelloScript.Cube.SetActive(true);
         CustumHantei = true;
     }
+    #endregion
+
+    #region　シーン遷移
     public void Online_Select()
     {
         SceneManager.LoadScene(1);
     }
+    #endregion
+
+    
     public void return_push()
     {
         return;
     }
-    
+
+    #region　対戦モードのUI表示
     public void GameStart()
     {
         button_active(false, BottonLsist_first);
@@ -67,7 +75,9 @@ public class Botton_process : MonoBehaviour
         else CustumHantei = false;
         EventSystem.current.SetSelectedGameObject(firstSelectedGameObject);
     }
-    #region �Ֆʂ��J�X�^�}�C�Y���邽�߂̃{�^���I������
+    #endregion
+    
+    #region 盤面をカスタマイズするためのボタン選択処理
     public void CustumBlackBotton()
     {
         CustumSelectBotton = 0;
@@ -85,30 +95,38 @@ public class Botton_process : MonoBehaviour
         CustumSelectBotton = 3;
     }
     #endregion
+
+    #region タイトルに戻るかどうかを確認するUIを表示
     public void return_ShowUI()
     {
         ResetHantei = false;
         if (CustumHantei)
         {
             Reset_UI(OthelloSystemScripts, BottonLsist_second, No, false);
-            ChoiceUIText.text = "�J�X�^���𒆒f���āA�^�C�g���ɖ߂�܂����H";
+            ChoiceUIText.text = "カスタムを中断して、タイトルに戻りますか？";
 
         }
         else
         {
             Reset_UI(OthelloSystemScripts, BottonLsist_third, No, false);
-            ChoiceUIText.text = "���݂̎����𒆒f���āA�^�C�g���ɖ߂�܂����H";
+            ChoiceUIText.text = "現在の試合を中断して、タイトルに戻りますか？";
         }    
 
         
     }
+    #endregion
+
+    #region 盤面の状態をリセットするかどうかを確認するUIを表示
     public void Reset_ShowUI()
     {
         ResetHantei = true;
         if (CustumHantei)Reset_UI(OthelloSystemScripts, BottonLsist_second, No, false);
         else Reset_UI(OthelloSystemScripts, BottonLsist_third, No, false);
-        ChoiceUIText.text = "�Ֆʂ̃R�}�����߂̈ʒu�ɖ߂��܂����H";
+        ChoiceUIText.text = "盤面のコマを初めの位置に戻しますか？";
     }
+    #endregion
+
+    #region ゲームの対戦結果時のタイトルへ戻るかどうかを確認するUiを表示
     public void GameOver_TitleShowUI()
     {
         GameOverHantei = true;
@@ -116,8 +134,11 @@ public class Botton_process : MonoBehaviour
         Reset_UI(OthelloSystemScripts, BottonLsist_third, No, false);
         othelloScript.TitleButton.SetActive(false);
         othelloScript.OneMoreButton.SetActive(false);
-        ChoiceUIText.text = "�^�C�g���ɖ߂�܂����H";
+        ChoiceUIText.text = "タイトルに戻りますか？";
     }
+    #endregion
+
+    #region ゲームの対戦結果時のもう一度同じ盤面で対戦するかどうかを確認するUiを表示
     public void GameOver_OneMoreShowUI()
     {
         GameOverHantei = true;
@@ -125,8 +146,11 @@ public class Botton_process : MonoBehaviour
         Reset_UI(OthelloSystemScripts, BottonLsist_third, No, false);
         othelloScript.TitleButton.SetActive(false);
         othelloScript.OneMoreButton.SetActive(false);
-        ChoiceUIText.text = "������x�����Ֆʂőΐ킵�܂����H";
+        ChoiceUIText.text = "もう一度同じ盤面で対戦しますか？";
     }
+    #endregion
+
+    #region 確認UIにおける承諾処理
     public void YesButton()
     {   if(!ResetHantei)
         {
@@ -148,6 +172,10 @@ public class Botton_process : MonoBehaviour
             othelloScript.Cube.SetActive(true);
         }
     }
+    #endregion
+
+
+    #region 確認UIにおける否定処理
     public void NoButton()
     {
         if (GameOverHantei)
@@ -165,16 +193,24 @@ public class Botton_process : MonoBehaviour
         }
         
     }
+    #endregion
+
+    #region ゲームの対戦結果時のUIを表示
     public void GameOverReset()
     {
         Reset_UI(OthelloSystemScripts, BottonLsist_third, othelloScript.TitleButton, false);
         ChoiceUI.SetActive(false);
     }
+    #endregion
+
+    #region 特定のボタンオブジェクトを表示するかしないか
     void button_active(bool hantei, Button[] Botton_Lsist)
     {
         foreach (Button button in Botton_Lsist) button.gameObject.SetActive(hantei);
     }
+    #endregion
 
+    #region 特定のゲームオブジェクトにアタッチされているスクリプト全てをアクティブにするかしないか
     void script_active(bool hantei, GameObject ScriptObject)
     {
 
@@ -182,6 +218,9 @@ public class Botton_process : MonoBehaviour
         foreach (MonoBehaviour script in scripts) script.enabled = hantei;
 
     }
+    #endregion
+
+    #region 確認するUIを表示もしくは非表示にする際の処理
     void Reset_UI(GameObject Object, Button[] Object1,GameObject Object2,bool hantei)
     {  
         button_active(hantei, Object1);
@@ -190,6 +229,6 @@ public class Botton_process : MonoBehaviour
         if(CustumHantei) BottonGameStart.gameObject.SetActive(hantei);
         script_active(hantei, Object);
     }
-
+    #endregion
 
 }
