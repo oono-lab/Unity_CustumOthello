@@ -17,20 +17,23 @@ public class PressButtonImageChange : MonoBehaviour
     void Start()
     {
 
-        // �e�{�^���̃N���b�N�C�x���g�ɑΉ����郁�\�b�h��o�^
+        #region 各ボタンのクリックイベントに対応するメソッドを登録
         NoneButton.onClick.AddListener(() => OnButtonPressed(NoneButton));
         BlackButton.onClick.AddListener(() => OnButtonPressed(BlackButton));
         WhiteButton.onClick.AddListener(() => OnButtonPressed(WhiteButton));
         WallButton.onClick.AddListener(() => OnButtonPressed(WallButton));
         BlackButton.image.sprite =  PressImage;
+        #endregion
     }
 
     private void OnButtonPressed(Button pressedButton)
     {
-        // �����ꂽ�{�^����PressImage��ݒ肵�A����ȊO��NotPressImage�ɕύX
+        #region 押されたボタンにPressImageを設定し、それ以外はNotPressImageに変更
         NoneButton.image.sprite = (pressedButton == NoneButton) ? PressImage : NotPressImage;
         BlackButton.image.sprite = (pressedButton == BlackButton) ? PressImage : NotPressImage;
         WhiteButton.image.sprite = (pressedButton == WhiteButton) ? PressImage : NotPressImage;
         WallButton.image.sprite = (pressedButton == WallButton) ? PressImage : NotPressImage;
+        #endregion
     }
+    
 }
