@@ -4,17 +4,18 @@ using UnityEngine.EventSystems;
 
 public class ButtonSound : MonoBehaviour
 {
-    public AudioSource selectSound;  // �{�^�����I�����ꂽ�Ƃ��̉�
-    public AudioSource clickSound;   // �{�^�����N���b�N���ꂽ�Ƃ��̉�
+    public AudioSource selectSound;  // ボタンが選択されたときの音
+    public AudioSource clickSound;   // ボタンがクリックされたときの音
     public bool isFirstSelection = true;
 
 
-    // �ŏ��ɑI�����ꂽ�Ƃ��͉���炳�Ȃ��悤�ɂ��A����ȍ~�̑I���ł͉����Đ�����֐�
+    #region 最初に選択されたときは音を鳴らさないようにし、それ以降の選択では音を再生する関数
     public void OnSelect(AudioSource audiosorce)
     {
         if (!isFirstSelection) audiosorce.Play();
         else isFirstSelection = false;
       
-    }   
+    }
+    #endregion
    
 }
